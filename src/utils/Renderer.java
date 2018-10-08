@@ -7,16 +7,16 @@ public class Renderer {
     private int color;
     BufferedImage img;
 
-    public Renderer(BufferedImage img){
-        this.img=img;
+    public Renderer(BufferedImage img) {
+        this.img = img;
         color = Color.RED.getRGB();
     }
 
-    private void drawPixel(int x, int y){
-        img.setRGB(x,y,color);
+    private void drawPixel(int x, int y) {
+        img.setRGB(x, y, color);
     }
 
-    public void lineTrivial(int x1, int y1,int x2, int y2) {
+    public void lineTrivial(int x1, int y1, int x2, int y2) {
         //y=kx+q
         int dx = x1 - x2; //rozdil prvni x a vystupni x
         int dy = y1 - y2; //-||-
@@ -32,10 +32,13 @@ public class Renderer {
                 p = y1;
                 y1 = y2;
             }
-            float k = (float) dy / (float) dx;//zavislot x na yx o kolik se zvedne
+
+
             for (int x = x1; x < x2; x++) {
-                int y = y1 + (int) (k * (x - x1));
-                drawPixel(x, y);//q = pocatek y souradnice
+                float k = (float) dy / (float) dx;//zavislot x na yx o kolik se zvedne
+                float q = y1 - k * x1;
+                float y = k * x + q;
+                drawPixel(x, (int) y);//q = pocatek y souradnice
             }
 
 
@@ -64,4 +67,56 @@ public class Renderer {
         }
 
 
-    }}
+    }
+
+    public void lineDDA(int x1, int y1, int x2, int y2) {
+
+        int dx,dy,l;
+        float k,G,H;
+        //k smernice,  rirstek x, h irustek po ose y
+
+        dx = x2-x1;
+        dy = y2-y1;
+        k = dy/(float)dx;
+
+        //urceni idici osy
+        if (Math.abs(dx)>Math.abs(dy)) {
+
+            G=1;
+            H=k;
+            if (x1>x2){
+                int temp = x1;
+                x1=x2;
+                x2=temp;
+                temp = y1;
+                y1=y2;
+                y2=temp;
+            }
+        }else{
+
+            G=1/k;
+            H=1;
+            if (y1>y2){
+                int temp = x1;
+                x1=x2;
+                x2=temp;
+                temp = y1;
+                y1=y2;
+                y2=temp;
+
+            }
+
+        }
+        float x = x1;
+        float y =y1;
+
+        int max = Math.max(Math.abs(dx),Math.abs(dy));
+        for (int i = 0; i <= max; i++) {
+            drawPixel(Math.round(x),Math.round(y));
+            x = x + G;
+            y = y + H;
+
+        }
+
+    }
+}
