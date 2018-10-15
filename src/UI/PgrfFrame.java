@@ -1,6 +1,7 @@
 package UI;
 
 import drawables.Drawable;
+import drawables.DrawableType;
 import drawables.Line;
 import utils.Renderer;
 
@@ -30,6 +31,7 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
     int clickY2;
     private List<Drawable> drawables;
     boolean firstclick=true;
+    private DrawableType type= DrawableType.LINE;
 
     public static void main(String... args) {
 
@@ -57,14 +59,24 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (firstclick){
-                    clickX=e.getX();
-                    clickY=e.getY();
-                     }else {
+                //zadavani usecky
+                if (type==DrawableType.LINE){
+                    if (firstclick){
+                        clickX=e.getX();
+                        clickY=e.getY();
+                    }else {
 
-                    drawables.add(new Line(clickX,clickY,e.getX(),e.getY()));
+                        drawables.add(new Line(clickX,clickY,e.getX(),e.getY()));
+                    }
+                    firstclick = !firstclick;
                 }
-               firstclick = !firstclick;
+                if (type==DrawableType.N_OJECT){
+
+                }
+                if (type==DrawableType.POLYGON){
+
+                }
+
 
                                 super.mouseClicked(e);
             }
