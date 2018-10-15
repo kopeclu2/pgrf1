@@ -1,12 +1,14 @@
 package UI;
 
 import drawables.Drawable;
+import drawables.Line;
 import utils.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,8 +26,10 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
     private int clickX=300;
     private int clickY=300;
     private int count = 5;
-
+    int clickX2;
+    int clickY2;
     private List<Drawable> drawables;
+    boolean firstclick=true;
 
     public static void main(String... args) {
 
@@ -44,6 +48,7 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
 
         setLocationRelativeTo(null);
 
+        drawables = new ArrayList<>();
 
         panel = new JPanel();
         add(panel);
@@ -52,9 +57,16 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                clickX =e.getX();
-                clickY= e.getY();
-                super.mouseClicked(e);
+                if (firstclick){
+                    clickX=e.getX();
+                    clickY=e.getY();
+                     }else {
+
+                    drawables.add(new Line(clickX,clickY,e.getX(),e.getY()));
+                }
+               firstclick = !firstclick;
+
+                                super.mouseClicked(e);
             }
         });
 
@@ -92,7 +104,9 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
     private void draw() {
         img.getGraphics().fillRect(0, 0, img.getWidth(), img.getHeight());
 
-
+        for (Drawable drawable : drawables) {
+            drawable.draw(renderer);
+        }
 
 
         panel.getGraphics().drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
@@ -109,7 +123,7 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
     public void mouseMoved(MouseEvent e) {
             coorX = e.getX();
             coorY = e.getY();
-        System.out.println(coorX+" "+coorY);;
+
 
     }
 }
